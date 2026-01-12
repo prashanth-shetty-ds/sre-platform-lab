@@ -1,8 +1,11 @@
 # Platform Overview
 
 ## Purpose
-This document describes the high-level architecture of the SRE Platform Lab,
-including core components, responsibilities, and interaction boundaries.
+This platform enables multiple application teams to deploy reliable, scalable workloads with:
+
+- Predictable change control
+- Secure multi-tenant isolation
+- Robust life-cycle and disaster recovery support
 
 ## High-Level Components
 The platform is composed of the following major layers:
@@ -12,6 +15,24 @@ The platform is composed of the following major layers:
 - Platform Services Layer
 - Application Workloads
 - Operations & Reliability Tooling
+
+## Context Diagram
+
+         +------------------------------+
+         |  Platform Control Plane      |
+         | (K8s API, etcd, auth, etc.)   |
+         +-------------+----------------+
+                       |
+       +---------------+------------------+
+       | Kubernetes Worker Nodes (Pods)   |
+       | - Platform services              |
+       | - App workloads                  |
+       +---------------+------------------+
+                       |
+        +-------------------------------+
+        | External Traffic (Ingress)     |
+        | Internal Services / APIs       |
+        +-------------------------------+
 
 ## Infrastructure Layer
 The infrastructure layer provides compute, storage, and networking resources.
@@ -32,14 +53,18 @@ Responsibilities:
 - Resource isolation and quotas
 - Secure API access
 
-## Platform Services Layer
-Shared services consumed by application teams.
+#### Platform Services Layer
 
-Examples:
-- Ingress and traffic management
-- Certificate management
-- Image registry access
-- Observability components
+Shared services offered to teams with operational SLAs:
+
+- Ingress Controller (managed TLS termination)
+- Central logging (aggregated to Grafana/Loki)
+- Metrics collection (Prometheus)
+- Internal image registry (with vulnerability scanning)
+
+**Non-Goals for this layer**
+- Hosting customer workloads outside the cluster
+- Arbitrary tooling without documented ownership
 
 ## Application Workloads
 Business and platform workloads deployed by application teams.
@@ -57,14 +82,25 @@ Examples:
 - Backup and recovery
 - Incident response workflows
 
+## Non-Functional Requirements
+
+| Category | Requirement |
+|----------|-------------|
+| Reliability | 99.95% platform uptime |
+| Performance | API latency < 150ms p95 |
+| Security | All TLS > 1.2, CIS Benchmarks enforced |
+| Scalability | Support 50+ teams/namespaces |
+| Observability | Defined SLIs/SLAs |
 
 ## Responsibility Boundaries
 
-| Area | Platform Team | Application Team |
-|------|---------------|------------------|
-| Cluster availability | Yes | No |
-| Node OS patching | Yes | No |
-| Namespace management | Yes | Partial |
-| Application scaling | No | Yes |
-| Backup of platform services | Yes | No |
-| Application data backup | No | Yes |
+| Responsibility                   | Platform Team | App Team |
+|----------------------------------|:-------------:|:--------:|
+| Cluster provisioning             | ✓             |          |
+| Automated patching               | ✓             |          |
+| Namespace provisioning           | ✓             |          |
+| App config / scaling policies    |               | ✓        |
+| App data backup                  |               | ✓        |
+| Platform service alerts/SLIs     | ✓             |          |
+| App specific error budgets       |               | ✓        |
+
