@@ -18,6 +18,8 @@ The upgrade strategy is designed to:
 - Maintain rollback paths for critical components
 - Avoid simultaneous upgrades across failure domains
 
+Baseline enforcement is supported through the platform automation model.
+
 ## Kubernetes Upgrade Approach
 - Upgrade control plane components first
 - Validate cluster health before node upgrades

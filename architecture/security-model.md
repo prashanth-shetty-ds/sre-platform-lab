@@ -59,3 +59,5 @@ Security controls are enforced through automation to reduce human error:
 - Automated certificate rotation
 - Periodic security scanning and compliance checks
 - Policy enforcement during deployment workflows
+
+Baseline enforcement is supported through the platform automation model.
