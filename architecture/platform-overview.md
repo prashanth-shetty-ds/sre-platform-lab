@@ -53,7 +53,7 @@ Responsibilities:
 - Resource isolation and quotas
 - Secure API access
 
-#### Platform Services Layer
+## Platform Services Layer
 
 Shared services offered to teams with operational SLAs:
 
