@@ -61,3 +61,4 @@ Security controls are enforced through automation to reduce human error:
 - Policy enforcement during deployment workflows
 
 Baseline enforcement is supported through the platform automation model.
+Baseline compliance controls are enforced via configuration management roles, with selective application to balance security and operational stability
